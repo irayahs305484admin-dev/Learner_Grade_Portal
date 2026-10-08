@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learner Grade Access Portal</title>
+  <style>
+    :root {
+      --primary-navy: #0f3c5c;
+      --accent-blue: #1a73e8;
+      --hover-blue: #1557b0;
+      --bg-slate: #eef3f8;
+      --card-bg: #ffffff;
+      --text-dark: #202124;
+      --text-muted: #5f6368;
+      --pass-green: #28a745;
+      --fail-red: #dc3545;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { 
+      font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif; 
+      background-color: var(--bg-slate); 
+      color: var(--text-dark); 
+      min-height: 100vh; 
+    }
+
+    /* Branded Top Header Navigation */
+    .app-header {
+      background-color: var(--primary-navy);
+      color: white;
+      padding: 14px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .header-branding {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .school-logo {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      background-color: #ffffff;
+      border-radius: 50%;
+      padding: 3px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .school-details {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .school-name {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      text-transform: uppercase;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .school-id {
+      font-size: 12px;
+      color: #cbd5e1;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .portal-badge {
+      font-size: 13px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 6px 14px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+
+    /* Login View Styles */
+    .login-container {
+      max-width: 400px;
+      margin: 60px auto;
+      background: var(--card-bg);
+      padding: 35px;
+      border-radius: 14px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .login-container h2 { color: var(--primary-navy); margin-bottom: 20px; font-size: 22px; }
+    input {
+      width: 100%; padding: 12px 15px; margin: 10px 0;
+      border: 1px solid #ced4da; border-radius: 8px; font-size: 15px;
+      outline: none; transition: border-color 0.2s;
+    }
+    input:focus { border-color: var(--accent-blue); }
+    .btn-primary {
+      width: 100%; padding: 12px; background-color: var(--accent-blue);
+      color: white; border: none; border-radius: 8px; font-size: 16px;
+      font-weight: 600; cursor: pointer; margin-top: 10px; transition: background 0.2s;
+    }
+    .btn-primary:hover { background-color: var(--hover-blue); }
+    .error { color: var(--fail-red); margin-top: 12px; font-size: 14px; }
+
+    /* Dashboard Layout */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+    }
+
+    /* Left Card: Student Profile */
+    .profile-card { text-align: center; }
+    .avatar-icon {
+      width: 70px; height: 70px; background-color: #e8f0fe;
+      color: var(--accent-blue); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 15px auto; font-size: 32px;
+    }
+    .profile-card h3 { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+    .profile-card h2 { color: var(--primary-navy); font-size: 22px; margin: 4px 0 16px 0; }
+    .profile-info { text-align: left; border-top: 1px solid #edf2f7; padding-top: 15px; font-size: 14px; }
+    .profile-info p { margin-bottom: 8px; color: var(--text-dark); }
+
+    /* Right Card: Grade Matrix */
+    .table-card { overflow-x: auto; }
+    table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    th {
+      background-color: var(--accent-blue);
+      color: white; font-weight: 600; padding: 12px 10px;
+      text-align: center; font-size: 13px; text-transform: uppercase;
+    }
+    th:first-child { border-top-left-radius: 8px; text-align: left; padding-left: 15px; }
+    th:last-child { border-top-right-radius: 8px; }
+    td { padding: 12px 10px; border-bottom: 1px solid #edf2f7; text-align: center; font-size: 14px; }
+    td:first-child { text-align: left; padding-left: 15px; font-weight: 600; color: #2d3748; }
+    .highlight-row { background-color: #f7fafc; font-weight: 700; color: var(--primary-navy); }
+
+    /* Status Badges */
+    .badge {
+      display: inline-block; padding: 4px 12px; border-radius: 20px;
+      font-size: 12px; font-weight: 700; text-transform: uppercase;
+    }
+    .badge-pass { background-color: #d4edda; color: var(--pass-green); }
+    .badge-fail { background-color: #f8d7da; color: var(--fail-red); }
+
+    /* Bottom Row Grid */
+    .bottom-row { grid-column: span 2; display: grid; grid-template-columns: 1fr 280px; gap: 24px; }
+    
+    .avg-card {
+      text-align: center; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; background: linear-gradient(180deg, #ffffff 0%, #f4f8fd 100%);
+    }
+    .avg-card h4 { color: var(--primary-navy); font-size: 14px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+    .avg-score { font-size: 42px; font-weight: 800; color: var(--accent-blue); margin-bottom: 8px; }
+
+    .actions-card { display: flex; flex-direction: column; gap: 12px; justify-content: center; }
+    .btn-outline {
+      width: 100%; padding: 12px; background: transparent; color: var(--accent-blue);
+      border: 2px solid var(--accent-blue); border-radius: 8px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-outline:hover { background-color: #e8f0fe; }
+
+    /* Mobile Adaptability */
+    @media (max-width: 820px) {
+      .app-header { flex-direction: column; text-align: center; }
+      .header-branding { flex-direction: column; gap: 8px; }
+      .dashboard-grid, .bottom-row { grid-template-columns: 1fr; }
+      .bottom-row { grid-column: span 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top School Header -->
+  <header class="app-header">
+    <div class="header-branding">
+      <img src="school-logo.png" alt="School Logo" class="school-logo">
+      <div class="school-details">
+        <h1 class="school-name">ST. JUDE INTERNATIONAL ACADEMY</h1>
+        <span class="school-id">School ID: 301234 | Division of City Schools</span>
+      </div>
+    </div>
+    
+    <div class="portal-badge">
+      Learner Grade Access Portal
+    </div>
+  </header>
+
+  <div class="container">
+    <!-- Login Screen -->
+    <div id="login-view" class="login-container">
+      <h2>Sign In to Portal</h2>
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button class="btn-primary" onclick="login()">Access Grades</button>
+      <p id="error-msg" class="error"></p>
+    </div>
+
+    <!-- Main Grade Dashboard -->
+    <div id="dashboard-view" style="display: none;">
+      <div class="dashboard-grid">
+        
+        <!-- Student Info Card -->
+        <div class="card profile-card">
+          <div class="avatar-icon">👤</div>
+          <h3>Welcome,</h3>
+          <h2 id="student-name">...</h2>
+          <div class="profile-info">
+            <p><strong>Student ID:</strong> <span id="student-id">...</span></p>
+            <p><strong>Grade Level:</strong> <span id="student-grade">...</span></p>
+          </div>
+        </div>
+
+        <!-- Grade Report Card Matrix -->
+        <div class="card table-card">
+          <table>
+            <thead>
+              <tr>
+                <th>Subject</th>
+                <th>Term 1</th>
+                <th>Term 2</th>
+                <th>Term 3</th>
+                <th>Final Grade</th>
+                <th>Remarks</th>
+              </tr>
+            </thead>
+            <tbody id="grades-body"></tbody>
+            <tfoot>
+              <tr class="highlight-row">
+                <td>Term Average</td>
+                <td id="t1-avg">-</td>
+                <td id="t2-avg">-</td>
+                <td id="t3-avg">-</td>
+                <td colspan="2">-</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+
+        <!-- Summary & Actions Row -->
+        <div class="bottom-row">
+          
+          <div class="card avg-card">
+            <h4>Final General Average (School Year)</h4>
+            <div class="avg-score" id="final-general-average">-</div>
+            <div id="overall-status-pill"></div>
+          </div>
+
+          <div class="card actions-card">
+            <button class="btn-primary" onclick="window.print()">🖨️ Print Report Card</button>
+            <button class="btn-outline" onclick="logout()">🚪 Log Out</button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Replace with your Google Apps Script Web App URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxRpySIg2du9lSt4jlD-YgxPCcdxTpTpaD6OcCe-4KEbyErprETYo-l9GsP14lMPTa8/exec";
+
+    function login() {
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+      const errorEl = document.getElementById('error-msg');
+      errorEl.innerText = "Authenticating...";
+
+      fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify({ action: "login", username: u, password: p })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          errorEl.innerText = "";
+          showDashboard(data.student);
+        } else {
+          errorEl.innerText = data.message;
+        }
+      })
+      .catch(() => {
+        errorEl.innerText = "Error connecting to server. Please try again.";
+      });
+    }
+
+    function showDashboard(student) {
+      document.getElementById('login-view').style.display = 'none';
+      document.getElementById('dashboard-view').style.display = 'block';
+
+      document.getElementById('student-name').innerText = student.name;
+      document.getElementById('student-id').innerText = student.studentId;
+      document.getElementById('student-grade').innerText = student.gradeLevel || 'N/A';
+
+      const tbody = document.getElementById('grades-body');
+      tbody.innerHTML = '';
+
+      student.subjectReport.forEach(item => {
+        const badgeClass = item.status === 'PASSED' ? 'badge-pass' : (item.status === 'FAILED' ? 'badge-fail' : '');
+        
+        tbody.innerHTML += `
+          <tr>
+            <td>${item.subject}</td>
+            <td>${item.term1}</td>
+            <td>${item.term2}</td>
+            <td>${item.term3}</td>
+            <td><strong>${item.subjectFinalGrade}</strong></td>
+            <td><span class="badge ${badgeClass}">${item.status}</span></td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('t1-avg').innerText = student.termAverages.term1;
+      document.getElementById('t2-avg').innerText = student.termAverages.term2;
+      document.getElementById('t3-avg').innerText = student.termAverages.term3;
+
+      document.getElementById('final-general-average').innerText = student.finalGeneralAverage;
+      
+      const statusPillEl = document.getElementById('overall-status-pill');
+      if (student.overallStatus === "PASSED") {
+        statusPillEl.innerHTML = `<span class="badge badge-pass" style="font-size:14px; padding:6px 16px;">STATUS: PASSED</span>`;
+      } else if (student.overallStatus === "FAILED") {
+        statusPillEl.innerHTML = `<span class="badge badge-fail" style="font-size:14px; padding:6px 16px;">STATUS: FAILED</span>`;
+      } else {
+        statusPillEl.innerText = "";
+      }
+    }
+
+    function logout() {
+      document.getElementById('username').value = '';
+      document.getElementById('password').value = '';
+      document.getElementById('dashboard-view').style.display = 'none';
+      document.getElementById('login-view').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
