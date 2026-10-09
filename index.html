@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Learner Grade Access Portal</title>
   <style>
     :root {
@@ -22,26 +22,27 @@
       font-family: 'Segoe UI', Roboto, -apple-system, BlinkMacSystemFont, sans-serif; 
       background-color: var(--bg-slate); 
       color: var(--text-dark); 
-      min-height: 100vh; 
+      min-height: 100vh;
+      overflow-x: hidden; /* Prevents global horizontal scrolling */
     }
 
     .app-header {
       background-color: var(--primary-navy);
       color: white;
-      padding: 14px 30px;
+      padding: 14px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       flex-wrap: wrap;
-      gap: 15px;
+      gap: 12px;
     }
 
-    .header-branding { display: flex; align-items: center; gap: 15px; }
+    .header-branding { display: flex; align-items: center; gap: 12px; }
 
     .school-logo {
-      width: 52px;
-      height: 52px;
+      width: 48px;
+      height: 48px;
       object-fit: contain;
       background-color: #ffffff;
       border-radius: 50%;
@@ -50,94 +51,147 @@
     }
 
     .school-details { display: flex; flex-direction: column; }
-    .school-name { font-size: 18px; font-weight: 700; color: #ffffff; text-transform: uppercase; margin: 0; line-height: 1.2; }
-    .school-id { font-size: 12px; color: #cbd5e1; font-weight: 500; margin-top: 2px; }
+    .school-name { font-size: 16px; font-weight: 700; color: #ffffff; text-transform: uppercase; margin: 0; line-height: 1.2; }
+    .school-id { font-size: 11px; color: #cbd5e1; font-weight: 500; margin-top: 2px; }
 
     .portal-badge {
-      font-size: 13px; font-weight: 600;
+      font-size: 12px; font-weight: 600;
       background: rgba(255, 255, 255, 0.15);
       border: 1px solid rgba(255, 255, 255, 0.25);
-      padding: 6px 14px; border-radius: 20px;
+      padding: 5px 12px; border-radius: 20px;
       text-transform: uppercase;
     }
 
-    .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+    .container { max-width: 1100px; margin: 20px auto; padding: 0 15px; }
 
     .login-container {
-      max-width: 400px; margin: 60px auto;
-      background: var(--card-bg); padding: 35px;
+      max-width: 380px; margin: 40px auto;
+      background: var(--card-bg); padding: 25px;
       border-radius: 14px; box-shadow: 0 8px 24px rgba(0,0,0,0.08);
       text-align: center;
     }
-    .login-container h2 { color: var(--primary-navy); margin-bottom: 20px; font-size: 22px; }
+    .login-container h2 { color: var(--primary-navy); margin-bottom: 18px; font-size: 20px; }
     input {
-      width: 100%; padding: 12px 15px; margin: 10px 0;
-      border: 1px solid #ced4da; border-radius: 8px; font-size: 15px;
+      width: 100%; padding: 12px 14px; margin: 8px 0;
+      border: 1px solid #ced4da; border-radius: 8px; font-size: 14px;
       outline: none; transition: border-color 0.2s;
     }
     input:focus { border-color: var(--accent-blue); }
     .btn-primary {
       width: 100%; padding: 12px; background-color: var(--accent-blue);
-      color: white; border: none; border-radius: 8px; font-size: 16px;
+      color: white; border: none; border-radius: 8px; font-size: 15px;
       font-weight: 600; cursor: pointer; margin-top: 10px; transition: background 0.2s;
     }
     .btn-primary:hover { background-color: var(--hover-blue); }
     .btn-primary:disabled { background-color: #a0aec0; cursor: not-allowed; }
-    .error { color: var(--fail-red); margin-top: 12px; font-size: 14px; }
+    .error { color: var(--fail-red); margin-top: 10px; font-size: 13px; }
 
-    .dashboard-grid { display: grid; grid-template-columns: 300px 1fr; gap: 24px; }
-    .card { background: var(--card-bg); border-radius: 14px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
+    .dashboard-grid { display: grid; grid-template-columns: 280px 1fr; gap: 20px; }
+    .card { background: var(--card-bg); border-radius: 14px; padding: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; }
 
     .profile-card { text-align: center; }
     .avatar-icon {
-      width: 70px; height: 70px; background-color: #e8f0fe;
+      width: 60px; height: 60px; background-color: #e8f0fe;
       color: var(--accent-blue); border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 15px auto; font-size: 32px;
+      margin: 0 auto 12px auto; font-size: 28px;
     }
-    .profile-card h3 { font-size: 13px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
-    .profile-card h2 { color: var(--primary-navy); font-size: 22px; margin: 4px 0 16px 0; }
-    .profile-info { text-align: left; border-top: 1px solid #edf2f7; padding-top: 15px; font-size: 14px; }
-    .profile-info p { margin-bottom: 8px; color: var(--text-dark); }
+    .profile-card h3 { font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
+    .profile-card h2 { color: var(--primary-navy); font-size: 20px; margin: 4px 0 12px 0; }
+    .profile-info { text-align: left; border-top: 1px solid #edf2f7; padding-top: 12px; font-size: 13px; }
+    .profile-info p { margin-bottom: 6px; color: var(--text-dark); }
 
-    .table-card { overflow-x: auto; }
-    table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    .table-card { padding: 12px; width: 100%; overflow: hidden; }
+    
+    /* Strict Table Layout for Mobile Fitting */
+    table { 
+      width: 100%; 
+      border-collapse: separate; 
+      border-spacing: 0; 
+      table-layout: fixed; 
+    }
+    
     th {
       background-color: var(--accent-blue); color: white; font-weight: 600;
-      padding: 12px 10px; text-align: center; font-size: 13px; text-transform: uppercase;
+      padding: 10px 2px; text-align: center; font-size: 12px; text-transform: uppercase;
+      word-wrap: break-word;
     }
-    th:first-child { border-top-left-radius: 8px; text-align: left; padding-left: 15px; }
+    
+    /* Responsive Column Widths */
+    th:nth-child(1), td:nth-child(1) { width: 30%; text-align: left; padding-left: 6px; }
+    th:nth-child(2), td:nth-child(2) { width: 12%; }
+    th:nth-child(3), td:nth-child(3) { width: 12%; }
+    th:nth-child(4), td:nth-child(4) { width: 12%; }
+    th:nth-child(5), td:nth-child(5) { width: 17%; }
+    th:nth-child(6), td:nth-child(6) { width: 17%; }
+
+    th:first-child { border-top-left-radius: 8px; }
     th:last-child { border-top-right-radius: 8px; }
-    td { padding: 12px 10px; border-bottom: 1px solid #edf2f7; text-align: center; font-size: 14px; }
-    td:first-child { text-align: left; padding-left: 15px; font-weight: 600; color: #2d3748; }
+
+    td { 
+      padding: 9px 2px; 
+      border-bottom: 1px solid #edf2f7; 
+      text-align: center; 
+      font-size: 12px; 
+      word-wrap: break-word;
+    }
+    td:first-child { font-weight: 600; color: #2d3748; line-height: 1.2; }
+    
     .highlight-row { background-color: #f7fafc; font-weight: 700; color: var(--primary-navy); }
 
-    .badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase; }
+    .badge { 
+      display: inline-block; 
+      padding: 3px 6px; 
+      border-radius: 12px; 
+      font-size: 10px; 
+      font-weight: 700; 
+      text-transform: uppercase;
+      letter-spacing: -0.3px;
+    }
     .badge-pass { background-color: #d4edda; color: var(--pass-green); }
     .badge-fail { background-color: #f8d7da; color: var(--fail-red); }
 
-    .bottom-row { grid-column: span 2; display: grid; grid-template-columns: 1fr 280px; gap: 24px; }
-    .avg-card { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(180deg, #ffffff 0%, #f4f8fd 100%); }
-    .avg-card h4 { color: var(--primary-navy); font-size: 14px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
-    .avg-score { font-size: 42px; font-weight: 800; color: var(--accent-blue); margin-bottom: 8px; }
+    .bottom-row { grid-column: span 2; display: grid; grid-template-columns: 1fr 260px; gap: 20px; }
+    .avg-card { text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(180deg, #ffffff 0%, #f4f8fd 100%); padding: 20px; }
+    .avg-card h4 { color: var(--primary-navy); font-size: 13px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 6px; }
+    .avg-score { font-size: 38px; font-weight: 800; color: var(--accent-blue); margin-bottom: 6px; }
 
     .actions-card { display: flex; flex-direction: column; gap: 10px; justify-content: center; }
     .btn-outline {
       width: 100%; padding: 11px; background: transparent; color: var(--accent-blue);
       border: 2px solid var(--accent-blue); border-radius: 8px; font-weight: 600;
-      cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+      cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 14px;
     }
     .btn-outline:hover { background-color: #e8f0fe; }
     
     .sync-timestamp {
-      font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 4px;
+      font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 2px;
     }
 
-    @media (max-width: 820px) {
-      .app-header { flex-direction: column; text-align: center; }
-      .header-branding { flex-direction: column; gap: 8px; }
-      .dashboard-grid, .bottom-row { grid-template-columns: 1fr; }
+    .desktop-label { display: inline; }
+    .mobile-label { display: none; }
+
+    /* 📱 Mobile Specific Tweaks */
+    @media (max-width: 600px) {
+      .app-header { flex-direction: column; text-align: center; padding: 12px 10px; }
+      .header-branding { flex-direction: column; gap: 6px; }
+      .school-logo { width: 42px; height: 42px; }
+      .school-name { font-size: 15px; }
+      .school-id { font-size: 10px; }
+
+      .container { padding: 0 8px; margin: 12px auto; }
+      .dashboard-grid, .bottom-row { grid-template-columns: 1fr; gap: 12px; }
       .bottom-row { grid-column: span 1; }
+      .card { padding: 12px 8px; border-radius: 10px; }
+
+      .desktop-label { display: none; }
+      .mobile-label { display: inline; }
+
+      th { font-size: 10px; padding: 8px 1px; }
+      td { font-size: 11px; padding: 8px 1px; }
+      
+      .badge { font-size: 8px; padding: 2px 4px; }
+      .avg-score { font-size: 32px; }
     }
   </style>
 </head>
@@ -184,11 +238,11 @@
             <thead>
               <tr>
                 <th>Subject</th>
-                <th>Term 1</th>
-                <th>Term 2</th>
-                <th>Term 3</th>
-                <th>Final Grade</th>
-                <th>Remarks</th>
+                <th><span class="desktop-label">Term 1</span><span class="mobile-label">T1</span></th>
+                <th><span class="desktop-label">Term 2</span><span class="mobile-label">T2</span></th>
+                <th><span class="desktop-label">Term 3</span><span class="mobile-label">T3</span></th>
+                <th><span class="desktop-label">Final Grade</span><span class="mobile-label">Final</span></th>
+                <th><span class="desktop-label">Remarks</span><span class="mobile-label">Status</span></th>
               </tr>
             </thead>
             <tbody id="grades-body"></tbody>
@@ -227,7 +281,7 @@
   </div>
 
   <script>
-    // Paste your Google Apps Script Web App URL below
+    // Replace with your Google Apps Script Web App URL
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxRpySIg2du9lSt4jlD-YgxPCcdxTpTpaD6OcCe-4KEbyErprETYo-l9GsP14lMPTa8/exec";
 
     let activeUser = "";
@@ -336,10 +390,10 @@
       document.getElementById('t2-avg').innerText = student.termAverages.term2 || '-';
       document.getElementById('t3-avg').innerText = student.termAverages.term3 || '-';
 
-      // General Average (5th column of Term Average row)
+      // General Average cell in footer
       document.getElementById('final-gen-avg-cell').innerText = student.finalGeneralAverage || '-';
 
-      // Overall Remarks (6th column of Term Average row)
+      // Overall Remarks cell in footer
       const statusCell = document.getElementById('final-gen-status-cell');
       if (student.overallStatus === "PASSED") {
         statusCell.innerHTML = `<span class="badge badge-pass">PASSED</span>`;
@@ -354,14 +408,14 @@
       
       const statusPillEl = document.getElementById('overall-status-pill');
       if (student.overallStatus === "PASSED") {
-        statusPillEl.innerHTML = `<span class="badge badge-pass" style="font-size:14px; padding:6px 16px;">STATUS: PASSED</span>`;
+        statusPillEl.innerHTML = `<span class="badge badge-pass" style="font-size:12px; padding:5px 14px;">STATUS: PASSED</span>`;
       } else if (student.overallStatus === "FAILED") {
-        statusPillEl.innerHTML = `<span class="badge badge-fail" style="font-size:14px; padding:6px 16px;">STATUS: FAILED</span>`;
+        statusPillEl.innerHTML = `<span class="badge badge-fail" style="font-size:12px; padding:5px 14px;">STATUS: FAILED</span>`;
       } else {
         statusPillEl.innerHTML = ``;
       }
 
-      // Update sync timestamp
+      // Sync Timestamp
       const now = new Date();
       document.getElementById('sync-time').innerText = "Last synced: " + now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     }
