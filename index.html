@@ -198,7 +198,8 @@
                 <td id="t1-avg">-</td>
                 <td id="t2-avg">-</td>
                 <td id="t3-avg">-</td>
-                <td colspan="2">-</td>
+                <td id="final-gen-avg-cell">-</td>
+                <td id="final-gen-status-cell">-</td>
               </tr>
             </tfoot>
           </table>
@@ -330,10 +331,25 @@
         `;
       });
 
+      // Term Averages
       document.getElementById('t1-avg').innerText = student.termAverages.term1 || '-';
       document.getElementById('t2-avg').innerText = student.termAverages.term2 || '-';
       document.getElementById('t3-avg').innerText = student.termAverages.term3 || '-';
 
+      // General Average (5th column of Term Average row)
+      document.getElementById('final-gen-avg-cell').innerText = student.finalGeneralAverage || '-';
+
+      // Overall Remarks (6th column of Term Average row)
+      const statusCell = document.getElementById('final-gen-status-cell');
+      if (student.overallStatus === "PASSED") {
+        statusCell.innerHTML = `<span class="badge badge-pass">PASSED</span>`;
+      } else if (student.overallStatus === "FAILED") {
+        statusCell.innerHTML = `<span class="badge badge-fail">FAILED</span>`;
+      } else {
+        statusCell.innerText = '-';
+      }
+
+      // Final General Average Hero Card
       document.getElementById('final-general-average').innerText = student.finalGeneralAverage || '-';
       
       const statusPillEl = document.getElementById('overall-status-pill');
